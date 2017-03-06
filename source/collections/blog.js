@@ -1,60 +1,39 @@
 import $ from 'jquery';
-import { Collection, Component, Controller } from '../core/index.js';
+import { Collection, Component } from '../core/index.js';
 import Util from '../util/util.js';
 
 /* define new collection */
 const blog = new Collection('blog');
 
-const items = [{ title: 'DOG STORY' }, { title: 'CAT STORY' }, { title: 'PARROT STORY' }];
+/*mock array */
+const items = [
+	{ title: 'DOG STORY', tags: ["Monkey, Lion, Sheep"] },
+	{ title: 'CAT STORY', tags: ["Lion, Sheep"] },
+	{ title: 'PARROT STORY', tags: ["Zebra, Sheep"] },
+	{ title: 'GHOST STORY', tags: ["Bear, Sheep"]
+}];
 
-/* create item view */
-class Blog_Item extends Component {
-	constructor(props) {
-		super(props);
-	}
-	render() {
-		return (
-			`
-				<div class="collection-item" data-id="${this.props.data.id}">
-					<div class="container">
-						<div class="content">
-							<div class="title">
-								${this.props.data.title}
-							</div>
-						</div>
+/* create list of pets component*/
+const pet_stories = Component `
+	<div class="collection-list" data-name="animals">
+		${items.map((item, i) => {
+
+			return (
+				Component `
+					<div class="collection-item animal" data-id="${"id_" + (i + 1)}" data-tags="${item.tags}">
+						<div class="title">${(i + 1) + ' ' + item.title}</div>
 					</div>
-				</div>
-			`
-		);		
-	}
+				`
+			);
+
+		})}
+	</div>`;
+
+/* if the blog list is active render the component */
+if (blog.list) {
+	const target = document.getElementById('page');
+
+	Component.render(pet_stories, target);
 }
-
-class Blog_List extends Component {
-	constructor(props) {
-		super(props);
-	}
-	render() {
-		const array = this.props.items.map( (item, i) => {
-			
-			const data = {
-				id: 'id_' + i,
-				title: item.title
-			};
-
-			const post = new Blog_Item({ data });
-
-			return post.html;
-
-		}).join("");
-
-		return (
-			`<div class="collection-list" data-tags="farm,dog">${array}</div>`
-		);
-	}
-}
-
-const List = new Blog_List({ items });
-
-$('#page').append(List.html);
 
 export default blog;
