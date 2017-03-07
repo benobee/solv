@@ -19,8 +19,20 @@ class Template {
 		this.renderHTML(strings, exp);
 		this.renderInnerContent(strings, exp);
 		this.parseAttributes(strings, exp);
+		this.uniqueId();
 
 		console.log(this);
+	}
+	uniqueId() {
+		this._id = this.guid();
+
+		List.forEach((item) => {
+			if (!item._id) {
+				item._id = this._id;
+			} else if (item._id === this._id) {
+				this._id = this.guid();
+			}
+		});
 	}
 	renderHTML(strings, exp) {
 
@@ -119,6 +131,16 @@ class Template {
 		keys.forEach((item, i) => {
 			this.root.setAttribute(item, values[ i ]);
 		});
+	}
+	guid() {
+	  const s4 = () => {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	      .toString(16)
+	      .substring(1);
+	  };
+
+	  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	    s4() + '-' + s4() + s4() + s4();
 	}
 }
 
