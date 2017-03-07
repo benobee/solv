@@ -1,6 +1,16 @@
 /*
  * @description: turn a tagged template literal into a 
- * DOM element 
+ * DOM element. 
+ * @namespace: 'Component' - Create an object called Component
+ * which returns to be appended to the DOM as needed, as well as 
+ * store the object in the core component list array
+*/
+
+let Component = {};
+
+/* 
+ * create template class for decontructing tagged
+ * template literal
 */
 
 class Template {
@@ -9,7 +19,6 @@ class Template {
 		this.renderHTML(strings, exp);
 		this.renderInnerContent(strings, exp);
 		this.parseAttributes(strings, exp);
-		List.push(this);
 
 		console.log(this);
 	}
@@ -54,7 +63,7 @@ class Template {
 		        this.root.innerHTML = joined;
 		    }
 		} else {
-		   	console.error("needs to be a string or object");
+		   	console.error("COMPONENT ERROR: Needs to be a string or object...");
 		}
 	}
 	formatString(str) {
@@ -119,21 +128,23 @@ class Template {
 */
 
 const List = [];
-let Component = {};
 
 Component = (strings, ...exp) => {
+	/*create new template from string*/
 	const taggedLiteral = new Template(strings, ...exp);
 
+	/* push return object to component list */
+	List.push(taggedLiteral);
+
+	/* return the DOM element to be appended */
 	return taggedLiteral.root;
 };
-
-
 
 Component.list = List; //append all elements to root component in core
 
 /*
  * method for appending nodes which is contained
- * within the parent 'Component'
+ * within the parent 'Component' object
 */
 Component.render = (element, target) => {
 	target.appendChild(element);
